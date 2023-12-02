@@ -8,8 +8,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Tokenizer implements ITokenizer {
+    private String forthCode;
+
+    public Tokenizer(String forthCode) {
+        this.forthCode = forthCode;
+    }
     @Override
-    public List<String> tokenize(String forthCode) {
+    public List<String> tokenize() {
         List<String> tokens = new ArrayList<>();
 
         // Define regular expressions for numbers, operations, and Forth commands

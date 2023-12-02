@@ -30,3 +30,5 @@ bin/
 .DS_Store
 
 *.class
+
+source.s

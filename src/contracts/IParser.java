@@ -1,5 +1,9 @@
 package contracts;
 
+import nodes.Node;
+
+import java.util.Queue;
+
 public interface IParser {
-    void parse();
+    Queue<Node> parse();
 }
