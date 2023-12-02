@@ -1,6 +1,7 @@
 package converter;
 
 import contracts.IConverter;
+import nodes.CommandNode;
 import nodes.Node;
 import nodes.NumberNode;
 import nodes.OperationNode;
@@ -45,10 +46,35 @@ public class Converter implements IConverter {
                         break;
                 }
 
-                assemblyQueue.add("popq  %rax");
-                assemblyQueue.add("popq  %rbx");
-                assemblyQueue.add(operationCode + " %rbx, %rax");
-                assemblyQueue.add("pushq %rax");
+                assemblyQueue.add("popq  %rax"); // pop first value
+                assemblyQueue.add("popq  %rbx"); // pop second value
+                assemblyQueue.add(operationCode + " %rbx, %rax"); // perform operation
+                assemblyQueue.add("pushq %rax"); // push to stack
+            } else if (node instanceof CommandNode) {
+                // available commands
+                // dup|swap|nip|tuck|drop|over|cr
+                String command = ((CommandNode) node).getCommand();
+
+                switch (command) {
+                    case "dup":
+                        assemblyQueue.add("movq (%rsp), %rax"); // copy the value from the top of the stack to %rax
+                        assemblyQueue.add("pushq %rax"); // push to stack
+                        break;
+                    case "swap":
+                        assemblyQueue.add("popq  %rax"); // pop first value
+                        assemblyQueue.add("popq  %rbx"); // pop second value
+                        assemblyQueue.add("pushq %rax"); // push to stack first
+                        assemblyQueue.add("pushq %rbx"); // push to stack second
+                        break;
+                    case "nip":
+                        break;
+                    case "tuck":
+                        break;
+                    case "drop":
+                        break;
+                    case "over":
+                        break;
+                }
             }
         }
     }
