@@ -17,7 +17,7 @@ import java.util.Queue;
 
 public class Main {
     public static void main(String[] args) {
-        String forthCode = "2 3 +";
+        String forthCode = "2 3 + 8 - 3 *";
 //        String forthCode = "3 4 * dup nip 5 - swap tuck 2 / drop over + . cr";
         Tokenizer tokenizer = new Tokenizer(forthCode);
         List<String> tokens = tokenizer.tokenize();

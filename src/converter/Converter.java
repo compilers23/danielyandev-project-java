@@ -9,9 +9,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Converter implements IConverter {
-    private Queue<Node> queue;
+    private final Queue<Node> queue;
 
-    private Queue<String> assemblyQueue = new LinkedList<>();
+    private final Queue<String> assemblyQueue = new LinkedList<>();
 
     public Converter(Queue<Node> queue) {
         this.queue = queue;
@@ -31,14 +31,24 @@ public class Converter implements IConverter {
 
                 // in case of operations we pop 2 top values from stack,
                 // perform operation and push back to the top of the stack
+
+                String operationCode = "";
                 switch (operation) {
                     case "+":
-                        assemblyQueue.add("popq  %rax");
-                        assemblyQueue.add("popq  %rbx");
-                        assemblyQueue.add("addq  %rbx, %rax");
-                        assemblyQueue.add("pushq %rax");
+                        operationCode = "addq";
+                        break;
+                    case "-":
+                        operationCode = "subq";
+                        break;
+                    case "*":
+                        operationCode = "imulq";
                         break;
                 }
+
+                assemblyQueue.add("popq  %rax");
+                assemblyQueue.add("popq  %rbx");
+                assemblyQueue.add(operationCode + " %rbx, %rax");
+                assemblyQueue.add("pushq %rax");
             }
         }
     }

@@ -63,7 +63,7 @@ public class Parser implements IParser {
     }
 
     private boolean isOperator(String str) {
-        return str.matches("[+*-/]"); // Add other operators as needed
+        return str.matches("[+*-]"); // Add other operators as needed
     }
 
     private boolean isCommand(String str) {
