@@ -1,5 +1,6 @@
 package tokenizer;
 
+import constants.Constants;
 import contracts.ITokenizer;
 
 import java.util.ArrayList;
@@ -17,12 +18,7 @@ public class Tokenizer implements ITokenizer {
     public List<String> tokenize() {
         List<String> tokens = new ArrayList<>();
 
-        // Define regular expressions for numbers, operations, and Forth commands
-        String numberPattern = "-?\\d+";
-        String operatorPattern = "[+*]";
-        String commandPattern = "dup|swap|nip|tuck|drop|over|cr|\\.s"; // todo move to constants
-
-        String regex = String.format("(%s|%s|%s|\\S)", numberPattern, operatorPattern, commandPattern);
+        String regex = String.format("(%s|%s|%s|\\S)", Constants.numberRegex, Constants.operatorRegex, Constants.commandRegex);
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(forthCode);
 

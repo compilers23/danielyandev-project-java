@@ -1,5 +1,6 @@
 package parser;
 
+import constants.Constants;
 import contracts.IParser;
 import nodes.CommandNode;
 import nodes.Node;
@@ -59,16 +60,16 @@ public class Parser implements IParser {
     }
 
     private boolean isNumeric(String str) {
-        return str.matches("-?\\d+");
+        return str.matches(Constants.numberRegex);
     }
 
     private boolean isOperator(String str) {
-        return str.matches("[+*-]"); // Add other operators as needed
+        return str.matches(Constants.operatorRegex);
     }
 
     private boolean isCommand(String str) {
         // You can add conditions to identify command tokens
-        return str.matches("dup|swap|nip|tuck|drop|over|cr|\\.s"); // Modify as needed, todo move to constants
+        return str.matches(Constants.commandRegex);
     }
 
     public List<String> getErrors() {
