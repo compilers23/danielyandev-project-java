@@ -12,7 +12,7 @@ public class Tokenizer implements ITokenizer {
     private final String forthCode;
 
     public Tokenizer(String forthCode) {
-        this.forthCode = forthCode;
+        this.forthCode = removeComments(forthCode);
     }
     @Override
     public List<String> tokenize() {
@@ -28,5 +28,9 @@ public class Tokenizer implements ITokenizer {
         }
 
         return tokens;
+    }
+
+    private String removeComments(String forthCode) {
+        return forthCode.replaceAll(Constants.commentRegex, "");
     }
 }

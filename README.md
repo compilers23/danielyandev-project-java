@@ -144,4 +144,9 @@ This will generate `output` file that is your compiled source code
     <td>Perform commands swap and over</td>
     <td>5 6 tuck (stack was {5, 6}, after tuck it will be {6, 5, 6})</td>
 </tr>
+<tr>
+    <td>(comment string)</td>
+    <td>Put comments in code</td>
+    <td>5 6 + (this is a comment describing addition process and will not be compiled)</td>
+</tr>
 </table>

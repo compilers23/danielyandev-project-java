@@ -1,9 +1,9 @@
-3 2 * dup + .s cr
+3 2 * dup + .s cr (everything in parentheses will be ignored while compiling)
 10 2 swap * .s cr
 5 6 * 8 nip 7 + .s cr
-10 3 - 2 tuck 5 * .s cr
+10 3 - 2 tuck 5 * .s cr(comments can be useful for understanding the code)
 9 4 * 2 drop 4 * .s cr
 8 2 * 5 drop 1 + .s cr
 20 3 swap nip 10 * 2 + .s cr
 11 4 tuck drop * 3 + .s cr
-9 2 over * 8 9 - .s cr
+9 2 over * 8 9 - .s cr (or remembering what it means after a long time)
