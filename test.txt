@@ -3,7 +3,7 @@
 5 6 * 8 nip 7 + .s cr
 10 3 - 2 tuck 5 * .s cr
 9 4 * 2 drop 4 * .s cr
-dup 8 2 * 5 drop + .s cr
+8 2 * 5 drop 1 + . cr
 20 3 swap nip 10 * 2 + .s cr
 11 4 tuck drop * 3 + .s cr
 9 2 over * 8 9 - .s cr
