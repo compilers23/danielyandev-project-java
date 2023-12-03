@@ -51,8 +51,7 @@ public class Converter implements IConverter {
                 assemblyQueue.add(operationCode + " %rbx, %rax"); // perform operation
                 assemblyQueue.add("pushq %rax"); // push to stack
             } else if (node instanceof CommandNode) {
-                // available commands
-                // dup|swap|nip|tuck|drop|over|cr
+
                 String command = ((CommandNode) node).getCommand();
 
                 switch (command) {
@@ -67,12 +66,35 @@ public class Converter implements IConverter {
                         assemblyQueue.add("pushq %rbx"); // push to stack second
                         break;
                     case "nip":
+                        assemblyQueue.add("addq $8, %rsp"); // skip over the second item on the stack (8 bytes)
                         break;
                     case "tuck":
+                        assemblyQueue.add("popq  %rax"); // pop first value
+                        assemblyQueue.add("popq  %rbx"); // pop second value
+                        assemblyQueue.add("pushq %rax"); // push to stack first
+                        assemblyQueue.add("pushq %rbx"); // push to stack second
+                        assemblyQueue.add("pushq %rax"); // push to stack first
                         break;
                     case "drop":
+                        assemblyQueue.add("popq %rax"); // pop the top item from the stack
                         break;
                     case "over":
+                        assemblyQueue.add("movq 8(%rsp), %rax"); // copy the second item from the top
+                        assemblyQueue.add("pushq %rax"); // push to stack
+                        break;
+                    case "cr":
+                        assemblyQueue.add("movq $1, %rax"); // syscall: write
+                        assemblyQueue.add("movq $1, %rdi"); // file descriptor: STDOUT_FILENO
+                        assemblyQueue.add("lea newline, %rsi"); // pointer to the newline character
+                        assemblyQueue.add("movq $1, %rdx"); // number of bytes to write (1 byte for newline)
+                        assemblyQueue.add("syscall");
+                        break;
+                    case ".s":
+                        assemblyQueue.add("movq (%rsp),  %rsi"); // move result of your calculation to rsi
+                        assemblyQueue.add("movq $0, %rax");
+                        assemblyQueue.add("pushq  %rax");
+                        assemblyQueue.add("lea fmt(%rip), %rdi"); // another argument for printf
+                        assemblyQueue.add("call    printf");
                         break;
                 }
             }

@@ -1,8 +1,6 @@
 import converter.Converter;
-import nodes.CommandNode;
+import exceptions.CompilationErrorException;
 import nodes.Node;
-import nodes.NumberNode;
-import nodes.OperationNode;
 import parser.Parser;
 import tokenizer.Tokenizer;
 
@@ -16,14 +14,17 @@ import java.util.List;
 import java.util.Queue;
 
 public class Main {
-    public static void main(String[] args) {
-        String forthCode = "2 3 + 8 - 3 *";
-//        String forthCode = "3 4 * dup nip 5 - swap tuck 2 / drop over + . cr";
+    public static void main(String[] args) throws CompilationErrorException {
+        String forthCode = "2 7 * dup nip 4 - swap tuck drop over + .s cr";
         Tokenizer tokenizer = new Tokenizer(forthCode);
         List<String> tokens = tokenizer.tokenize();
 
         Parser parser = new Parser(tokens);
         Queue<Node> commandQueue = parser.parse();
+
+        if (parser.getErrors().size() > 0) {
+            throw new CompilationErrorException();
+        }
 
         Converter converter = new Converter(commandQueue);
         converter.convertToAssembly();
@@ -45,19 +46,14 @@ public class Main {
 
     }
 
-    private static void printQueue(Queue<Node> queue) {
-        while (!queue.isEmpty()) {
-            System.out.println(queue.poll());
-        }
-    }
-
-
     private static void writeToFile(Queue<String> assemblyCommands) {
         Path path = Paths.get("./source.s");
 
         String[] start = {
-                ".section .data",
-                ".section .text",
+                ".data",
+                "fmt: .asciz \"%d\\n\"", // format string for printing an integer followed by a newline
+                "newline: .ascii \"\\n\"", // ASCII code for newline
+                ".text",
                 ".global _start",
                 "",
                 "_start:"

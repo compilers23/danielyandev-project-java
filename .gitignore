@@ -32,3 +32,4 @@ bin/
 *.class
 
 source.s
+output.o

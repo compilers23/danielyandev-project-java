@@ -68,7 +68,11 @@ public class Parser implements IParser {
 
     private boolean isCommand(String str) {
         // You can add conditions to identify command tokens
-        return str.matches("dup|swap|nip|tuck|drop|over|cr"); // Modify as needed
+        return str.matches("dup|swap|nip|tuck|drop|over|cr|\\.s"); // Modify as needed, todo move to constants
+    }
+
+    public List<String> getErrors() {
+        return errors;
     }
 
 }

@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Tokenizer implements ITokenizer {
-    private String forthCode;
+    private final String forthCode;
 
     public Tokenizer(String forthCode) {
         this.forthCode = forthCode;
@@ -20,7 +20,7 @@ public class Tokenizer implements ITokenizer {
         // Define regular expressions for numbers, operations, and Forth commands
         String numberPattern = "-?\\d+";
         String operatorPattern = "[+*]";
-        String commandPattern = "dup|swap|nip|tuck|drop|over|cr";
+        String commandPattern = "dup|swap|nip|tuck|drop|over|cr|\\.s"; // todo move to constants
 
         String regex = String.format("(%s|%s|%s|\\S)", numberPattern, operatorPattern, commandPattern);
         Pattern pattern = Pattern.compile(regex);
