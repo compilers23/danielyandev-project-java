@@ -56,50 +56,30 @@ public class Converter implements IConverter {
 
                 switch (command) {
                     case "dup":
-                        assemblyQueue.add("movq (%rsp), %rax"); // copy the value from the top of the stack to %rax
-                        assemblyQueue.add("pushq %rax"); // push to stack
+                        asmDup();
                         break;
                     case "swap":
-                        assemblyQueue.add("popq  %rax"); // pop first value
-                        assemblyQueue.add("popq  %rbx"); // pop second value
-                        assemblyQueue.add("pushq %rax"); // push to stack first
-                        assemblyQueue.add("pushq %rbx"); // push to stack second
+                        asmSwap();
                         break;
                     case "nip":
-                        assemblyQueue.add("addq $8, %rsp"); // skip over the second item on the stack (8 bytes)
+                        asmSwap();
+                        asmDrop();
                         break;
                     case "tuck":
-                        assemblyQueue.add("popq  %rax"); // pop first value
-                        assemblyQueue.add("popq  %rbx"); // pop second value
-                        assemblyQueue.add("pushq %rax"); // push to stack first
-                        assemblyQueue.add("pushq %rbx"); // push to stack second
-                        assemblyQueue.add("pushq %rax"); // push to stack first
+                        asmSwap();
+                        asmOver();
                         break;
                     case "drop":
-                        assemblyQueue.add("popq %rax"); // pop the top item from the stack
+                        asmDrop();
                         break;
                     case "over":
-                        assemblyQueue.add("popq  %rax"); // pop first value
-                        assemblyQueue.add("popq  %rbx"); // pop second value
-                        assemblyQueue.add("pushq %rbx"); // push to stack second
-                        assemblyQueue.add("pushq %rax"); // push to stack first
-                        assemblyQueue.add("pushq %rbx"); // push to stack second
+                        asmOver();
                         break;
                     case "cr":
-                        assemblyQueue.add("movq $1, %rax"); // syscall: write
-                        assemblyQueue.add("movq $1, %rdi"); // file descriptor: STDOUT_FILENO
-                        assemblyQueue.add("lea newline, %rsi"); // pointer to the newline character
-                        assemblyQueue.add("movq $1, %rdx"); // number of bytes to write (1 byte for newline)
-                        assemblyQueue.add("syscall");
+                        asmCr();
                         break;
                     case ".s":
-                        assemblyQueue.add("movq (%rsp), %rsi"); // move result of your calculation to rsi
-                        assemblyQueue.add("movq $0, %rax");
-                        assemblyQueue.add("pushq %rax");
-                        assemblyQueue.add("lea fmt(%rip), %rdi"); // another argument for printf
-                        assemblyQueue.add("call printf");
-                        assemblyQueue.add("mov $0, %edi"); // file descriptor 0 (stdout)
-                        assemblyQueue.add("call fflush"); // flush the buffer
+                        asmPrintTop();
                         break;
                 }
             }
@@ -108,5 +88,47 @@ public class Converter implements IConverter {
 
     public Queue<String> getAssemblyQueue() {
         return assemblyQueue;
+    }
+
+    private void asmDup() {
+        assemblyQueue.add("movq (%rsp), %rax"); // copy the value from the top of the stack to %rax
+        assemblyQueue.add("pushq %rax"); // push to stack
+    }
+
+    private void asmSwap() {
+        assemblyQueue.add("popq  %rax"); // pop first value
+        assemblyQueue.add("popq  %rbx"); // pop second value
+        assemblyQueue.add("pushq %rax"); // push to stack first
+        assemblyQueue.add("pushq %rbx"); // push to stack second
+    }
+
+    private void asmDrop() {
+        assemblyQueue.add("popq %rax"); // pop the top item from the stack
+    }
+
+    private void asmOver() {
+        assemblyQueue.add("popq  %rax"); // pop first value
+        assemblyQueue.add("popq  %rbx"); // pop second value
+        assemblyQueue.add("pushq %rbx"); // push to stack second
+        assemblyQueue.add("pushq %rax"); // push to stack first
+        assemblyQueue.add("pushq %rbx"); // push to stack second
+    }
+
+    private void asmCr() {
+        assemblyQueue.add("movq $1, %rax"); // syscall: write
+        assemblyQueue.add("movq $1, %rdi"); // file descriptor: STDOUT_FILENO
+        assemblyQueue.add("lea newline, %rsi"); // pointer to the newline character
+        assemblyQueue.add("movq $1, %rdx"); // number of bytes to write (1 byte for newline)
+        assemblyQueue.add("syscall");
+    }
+
+    private void asmPrintTop() {
+        assemblyQueue.add("movq (%rsp), %rsi"); // move result of your calculation to rsi
+        assemblyQueue.add("movq $0, %rax");
+        assemblyQueue.add("pushq %rax");
+        assemblyQueue.add("lea fmt(%rip), %rdi"); // another argument for printf
+        assemblyQueue.add("call printf");
+        assemblyQueue.add("mov $0, %edi"); // file descriptor 0 (stdout)
+        assemblyQueue.add("call fflush"); // flush the buffer
     }
 }
