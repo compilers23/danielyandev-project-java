@@ -75,7 +75,7 @@ public class Compiler {
 
         String[] start = {
                 ".data",
-                "fmt: .asciz \"%d\\n\"", // format string for printing an integer followed by a newline
+                "fmt: .asciz \"%d\"", // format string for printing an integer
                 "newline: .ascii \"\\n\"", // ASCII code for newline
                 ".text",
                 ".global _start",
