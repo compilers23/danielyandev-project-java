@@ -1,1 +1,2 @@
-4 5 + dup * 1 swap - .s
+4 5 + dup * 1 swap - .s cr
+6 10 - 7 * 3 swap - .s cr

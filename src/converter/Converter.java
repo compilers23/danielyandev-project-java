@@ -79,8 +79,11 @@ public class Converter implements IConverter {
                         assemblyQueue.add("popq %rax"); // pop the top item from the stack
                         break;
                     case "over":
-                        assemblyQueue.add("movq 8(%rsp), %rax"); // copy the second item from the top
-                        assemblyQueue.add("pushq %rax"); // push to stack
+                        assemblyQueue.add("popq  %rax"); // pop first value
+                        assemblyQueue.add("popq  %rbx"); // pop second value
+                        assemblyQueue.add("pushq %rbx"); // push to stack second
+                        assemblyQueue.add("pushq %rax"); // push to stack first
+                        assemblyQueue.add("pushq %rbx"); // push to stack second
                         break;
                     case "cr":
                         assemblyQueue.add("movq $1, %rax"); // syscall: write
