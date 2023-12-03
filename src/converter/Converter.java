@@ -90,11 +90,13 @@ public class Converter implements IConverter {
                         assemblyQueue.add("syscall");
                         break;
                     case ".s":
-                        assemblyQueue.add("movq (%rsp),  %rsi"); // move result of your calculation to rsi
+                        assemblyQueue.add("movq (%rsp), %rsi"); // move result of your calculation to rsi
                         assemblyQueue.add("movq $0, %rax");
-                        assemblyQueue.add("pushq  %rax");
+                        assemblyQueue.add("pushq %rax");
                         assemblyQueue.add("lea fmt(%rip), %rdi"); // another argument for printf
-                        assemblyQueue.add("call    printf");
+                        assemblyQueue.add("call printf");
+                        assemblyQueue.add("mov $0, %edi"); // file descriptor 0 (stdout)
+                        assemblyQueue.add("call fflush"); // flush the buffer
                         break;
                 }
             }
