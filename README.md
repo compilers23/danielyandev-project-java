@@ -150,3 +150,7 @@ This will generate `output` file that is your compiled source code
     <td>5 6 + (this is a comment describing addition process and will not be compiled)</td>
 </tr>
 </table>
+
+# Authors
+- [Ruben Danielyan](https://github.com/danielyandev)
+- [Tigran Asatryan](https://github.com/atg1996)
