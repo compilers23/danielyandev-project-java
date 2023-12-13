@@ -1,7 +1,7 @@
-all: create-bin-dir compile
+all: create-bin-dir build
 
 create-bin-dir:
 	mkdir -p "bin"
 
-compile:
+build:
 	javac -d bin -sourcepath src src/Compiler.java
