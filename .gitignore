@@ -30,5 +30,5 @@ bin/
 .DS_Store
 
 *.class
-
-program
+*.s
+*.o

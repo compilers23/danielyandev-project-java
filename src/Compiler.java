@@ -1,5 +1,6 @@
 import converter.Converter;
 import exceptions.CompilationErrorException;
+import fs.Generator;
 import nodes.Node;
 import parser.Parser;
 import tokenizer.Tokenizer;
@@ -8,8 +9,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 
@@ -24,12 +23,7 @@ public class Compiler {
 
         // Get the file path from the command-line argument
         String filePath = args[0];
-
-        // if provided not an absolute path
-        // we need to find path from root dir
-        if (filePath.charAt(0) != '/') {
-            filePath = "../" + filePath;
-        }
+        String fileName = extractFileName(filePath);
 
         try {
             // Read all bytes from the file into a byte array
@@ -37,8 +31,7 @@ public class Compiler {
 
             // Convert the byte array to a String
             String forthCode = new String(fileBytes);
-
-            compile(forthCode);
+            compile(forthCode, fileName);
 
         } catch (IOException e) {
             // Handle IO exception, e.g., file not found
@@ -47,7 +40,25 @@ public class Compiler {
 
     }
 
-    private static void compile(String forthCode) throws CompilationErrorException {
+    private static String extractFileName(String filePath) {
+        // Create a Path object from the file path
+        Path path = Paths.get(filePath);
+
+        // Get the file name (including extension) from the path
+        String fullFileName = path.getFileName().toString();
+
+        // Find the first occurrence of the dot in the file name
+        int firstDotIndex = fullFileName.indexOf(".");
+
+        // Check if a dot was found
+        if (firstDotIndex != -1) {
+            return fullFileName.substring(0, firstDotIndex);
+        } else {
+            return fullFileName; // No dot found, return the entire file name
+        }
+    }
+
+    private static void compile(String forthCode, String fileName) throws CompilationErrorException {
         // tokenize code
         Tokenizer tokenizer = new Tokenizer(forthCode);
         List<String> tokens = tokenizer.tokenize();
@@ -67,35 +78,8 @@ public class Compiler {
 
         // write assembly code to output file
         Queue<String> assemblyCommands = converter.getAssemblyQueue();
-        writeToFile(assemblyCommands);
-    }
 
-    private static void writeToFile(Queue<String> assemblyCommands) {
-        Path path = Paths.get("./source.s");
-
-        String[] start = {
-                ".data",
-                "fmt: .asciz \"%d\"", // format string for printing an integer
-                "newline: .ascii \"\\n\"", // ASCII code for newline
-                ".text",
-                ".global _start",
-                "",
-                "_start:"
-        };
-
-        String[] end = {
-                "",
-                "movq %rax, %rdi",
-                "movq $60, %rax",
-                "syscall"
-        };
-
-        try {
-            Files.write(path, Arrays.asList(start));
-            Files.write(path, assemblyCommands, StandardOpenOption.APPEND);
-            Files.write(path, Arrays.asList(end), StandardOpenOption.APPEND);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Generator generator = new Generator();
+        generator.generateBinFile(assemblyCommands, fileName);
     }
 }
