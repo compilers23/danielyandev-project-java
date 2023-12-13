@@ -28,51 +28,28 @@ the file can contain
 This project contains a compiler which can be simply used with make command
 
 ```
-make FILE=source.txt [OUTPUT=my_program]
+make all
 ```
 
-It will read provided file path, compile the code and output to specified output path
-
-#### Note: FILE is required. OUTPUT is optional and by default it's "program"
-
-# Advanced usage
-
-If you want to go step by step you'll have to:
-
-### Compile java code
+It will compile the project into bin directory, then you can use bin/Compiler to compile your source file
 
 ```
-javac Compiler.java
+java -cp bin Compiler /path/to/something.txt
 ```
 
-### Generate assembly file
+or
 
 ```
-java Compiler /path/to/source.txt
+cd bin
+java Compiler /path/to/something.txt
 ```
 
-This will generate `source.s` file
-
-### Generate object file
-
-```
-as -o output.o source.s
-```
-
-This will generate `output.o` file
-
-### Generate binary file
-
-```
-ld -o output output.o -lc -dynamic-linker /lib64/ld-linux-x86-64.so.2
-```
-
-This will generate `output` file that is your compiled source code
+Note: This command will generate a file called "something", which you can run
 
 ### Run the result
 
 ```
-./output
+./something
 ```
 
 # Syntax
